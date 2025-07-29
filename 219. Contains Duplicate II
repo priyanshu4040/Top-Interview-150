@@ -1,0 +1,20 @@
+class Solution {
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        //HashMap Storing the value and its index
+        Map<Integer,Integer> map = new HashMap();
+        int idx = 0;
+
+        for(int i : nums) {
+            //Checking whether the element is present and if present then also checking the absolute difference b/w the indices 
+            if(map.containsKey(i) && Math.abs(idx - map.get(i)) <= k) {
+                return true;
+            }
+            else {
+                //If element is not present then adding the element in hashmap
+                map.put(i,idx);
+            }
+            idx++;
+        }
+        return false;
+    }
+}
