@@ -62,3 +62,29 @@ class Solution {
 
     }
 }
+
+
+//2nd Solution
+class Solution {
+    public int trap(int[] height) {
+        int n = height.length;
+        int left = 0, right = n-1, leftMax = height[0], rightMax = height[n-1], total = 0;
+
+        while(left <= right) {
+
+            if(leftMax >= rightMax) {
+                total = total + Math.max(0,(rightMax - height[right]));
+                rightMax = Math.max(rightMax, height[right]);
+                right--;
+            }
+            else {
+                total = total + Math.max(0,(leftMax - height[left]));
+                leftMax = Math.max(leftMax, height[left]);
+                left++;
+            }
+        }
+
+        return total;
+        
+    }
+}
