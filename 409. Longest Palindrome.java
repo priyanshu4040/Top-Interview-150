@@ -7,6 +7,9 @@ class Solution {
         for(char ch : s.toCharArray()){
             count[ch]++;
         }
+        //for(int i = 0; i < s.length(); i++) {
+        //    count[s.charAt(i)]++;
+        }
         int res = 0;
 
         for(int i = 0; i < 128; i++) {
