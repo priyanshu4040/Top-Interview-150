@@ -2,93 +2,41 @@ class Solution {
 
     public String longestPalindrome(String s) {
 
-        // Handle empty string
-        if (s == null || s.length() == 0)
-            return "";
+        if (s == null || s.length() < 2)
+            return s;
 
-        // ----------------------------------------------------------
-        // Step 1: Transform the string.
-        //
-        // Example:
-        // "abba"
-        // becomes
-        // "#a#b#b#a#"
-        //
-        // This converts every palindrome into an odd-length palindrome.
-        // ----------------------------------------------------------
-        StringBuilder sb = new StringBuilder();
+        int start = 0;
+        int end = 0;
 
-        sb.append('#');
+        for (int i = 0; i < s.length(); i++) {
 
-        for (char ch : s.toCharArray()) {
-            sb.append(ch);
-            sb.append('#');
-        }
+            // Odd length palindrome
+            int len1 = expand(s, i, i);
 
-        String str = sb.toString();
+            // Even length palindrome
+            int len2 = expand(s, i, i + 1);
 
-        int n = str.length();
+            int len = Math.max(len1, len2);
 
-        // P[i] = radius of palindrome centered at i
-        int[] P = new int[n];
-
-        // Current center of the rightmost palindrome
-        int center = 0;
-
-        // Right boundary of the rightmost palindrome
-        int right = 0;
-
-        // Track the longest palindrome
-        int maxLen = 0;
-        int maxCenter = 0;
-
-        // ----------------------------------------------------------
-        // Process every position
-        // ----------------------------------------------------------
-        for (int i = 0; i < n; i++) {
-
-            // Mirror position of i around current center
-            int mirror = 2 * center - i;
-
-            // If i lies inside the current palindrome,
-            // use previously computed information.
-            if (i < right) {
-                P[i] = Math.min(right - i, P[mirror]);
-            }
-
-            // Expand palindrome centered at i
-            while (i - P[i] - 1 >= 0 &&
-                   i + P[i] + 1 < n &&
-                   str.charAt(i - P[i] - 1) ==
-                   str.charAt(i + P[i] + 1)) {
-
-                P[i]++;
-            }
-
-            // Update center and right boundary
-            if (i + P[i] > right) {
-                center = i;
-                right = i + P[i];
-            }
-
-            // Update longest palindrome found
-            if (P[i] > maxLen) {
-                maxLen = P[i];
-                maxCenter = i;
+            if (len > end - start + 1) {
+                start = i - (len - 1) / 2;
+                end = i + len / 2;
             }
         }
 
-        // ----------------------------------------------------------
-        // Convert back to original string indices.
-        //
-        // In transformed string:
-        // start = maxCenter - maxLen
-        //
-        // Original index:
-        // start = (maxCenter - maxLen) / 2
-        // ----------------------------------------------------------
-        int start = (maxCenter - maxLen) / 2;
+        return s.substring(start, end + 1);
+    }
 
-        return s.substring(start, start + maxLen);
+    private int expand(String s, int left, int right) {
+
+        while (left >= 0 && right < s.length()
+                && s.charAt(left) == s.charAt(right)) {
+
+            left--;
+            right++;
+        }
+
+        // Actual palindrome length
+        return right - left - 1;
     }
 }
